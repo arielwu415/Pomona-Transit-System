@@ -60,6 +60,7 @@ public class Main {
 	}
 
 
+	@SuppressWarnings("resource")
 	public static void optionSwitch(int choice, Connection connection) throws SQLException {
 		
 		Scanner scan = new Scanner(System.in);
@@ -78,6 +79,7 @@ public class Main {
 					editTripOffering(connection);
 					break;
 				case 3:
+					showStop(connection);
 					break;
 				case 4:
 					break;
@@ -378,6 +380,38 @@ public class Main {
 		}
 		
 		showTripOffering(connection);
+	}
+	
+	
+	@SuppressWarnings("resource")
+	public static void showStop(Connection connection) {
+		
+		Scanner scan = new Scanner(System.in);
+		System.out.print("\nPlease enter the trip number: ");
+		String tripNum = scan.nextLine();
+		
+		String sql = "SELECT TS.TripNumber, S.StopNumber, S.StopAddress "
+				+ "FROM Stop AS S, TripStopInfo AS TS, Trip AS T "
+				+ "WHERE T.TripNumber = TS.TripNumber "
+				+ "AND S.StopNumber = TS.StopNumber "
+				+ "AND T.TripNumber = \"" + tripNum + "\" ";
+		
+		System.out.println("\n--------------- Stops in Trip " + tripNum + " ---------------");
+		Statement statement;
+		try {
+			statement = connection.createStatement();
+			ResultSet result = statement.executeQuery(sql);
+			
+			while(result.next()) {
+				int stopNum = result.getInt("StopNumber");
+				String stopAddr = result.getString("StopAddress");
+				
+				System.out.println(stopNum + " " + stopAddr);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+			
 	}
 	
 }
