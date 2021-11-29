@@ -118,10 +118,12 @@ public class Main {
 		String sql = "SELECT StartLocationName, DestinationName, Tripdate, "
 				+ "ScheduledStartTime, ScheduledArrivalTime, DriverName, BusID "
 				+ "FROM Trip, TripOffering "
-				+ "WHERE StartLocationName = \"" + startLocation + "\" "
+				+ "WHERE Trip.TripNumber = TripOffering.TripNumber "
+				+ "AND StartLocationName = \"" + startLocation + "\" "
 				+ "AND DestinationName = \"" + destination + "\" "
 				+ "AND Tripdate = \"" + date + "\"";
 		
+		System.out.println(sql);
 		
 		Statement statement;
 		try {
@@ -173,8 +175,10 @@ public class Main {
 					addTrips(connection);
 					break;
 				case 3:
+					changeDriver(connection);
 					break;
 				case 4:
+					changeBus(connection);
 					break;
 				case 5:
 					showTripOffering(connection);
@@ -206,12 +210,11 @@ public class Main {
 				String driver = result.getString("DriverName");
 				int bus = result.getInt("BusID");
 				
-				
 				System.out.println(String.format("%-15s %-15s %-15s %-15s %-15s %-15s", tripNum, date, startTime, arrivalTime, driver, bus));
 				
 			}
 		} catch (SQLException e){
-			
+			System.out.println("Unable to show trip offering info.");
 		}
 	}
 	
@@ -278,4 +281,103 @@ public class Main {
 		}
 		
 	}
+	
+	public static void showDriver(Connection connection) {
+		
+		String sql = "SELECT * FROM Driver";
+		Statement statement;
+		try {
+			statement = connection.createStatement();
+			ResultSet result = statement.executeQuery(sql);
+			
+			System.out.println("\n------- Driver List -------");
+			while(result.next()) {
+				String name = result.getString("DriverName");
+				System.out.println(" - " + name);
+			}
+			
+		} catch (SQLException e){
+			System.out.println("Unable to show diver info.");
+		}
+		
+	}
+	
+	
+	@SuppressWarnings("resource")
+	public static void changeDriver(Connection connection) {
+		
+		Scanner scan = new Scanner(System.in);
+		
+		showDriver(connection);
+		System.out.println("\nPlease specify which trip offering you want to edit ");
+		System.out.print("> Please enter the trip number: ");
+		String tripNum = scan.nextLine();
+		System.out.print("> Please enter the date: ");
+		String date = scan.nextLine();
+		System.out.print("> Please enter the start time: ");
+		String startTime = scan.nextLine();
+		
+		System.out.print("> Now enter the new dirver name: ");
+		String name = scan.nextLine();
+		
+		String sql = "UPDATE TripOffering "
+				+ "SET DriverName = \"" + name + "\" "
+				+ "WHERE TripNumber = \"" + tripNum + "\" "
+				+ "AND TripDate = \"" + date + "\" "
+				+ "AND ScheduledStartTime = \"" + startTime + "\" ";
+		
+		Statement statement;
+		try {
+			statement = connection.createStatement();
+			statement.executeUpdate(sql);
+			statement.execute(sql);
+			
+			System.out.println("Driver updated.");
+			
+		} catch (SQLException e) {
+			System.out.println("Driver update unsuccessful");
+		}
+		
+		showTripOffering(connection);
+		
+	}
+	
+	
+	@SuppressWarnings("resource")
+	public static void changeBus(Connection connection) {
+		
+		Scanner scan = new Scanner(System.in);
+		
+		System.out.println("\nPlease specify which trip offering you want to edit ");
+		System.out.print("> Please enter the trip number: ");
+		String tripNum = scan.nextLine();
+		System.out.print("> Please enter the date: ");
+		String date = scan.nextLine();
+		System.out.print("> Please enter the start time: ");
+		String startTime = scan.nextLine();
+		
+		System.out.print("> Now enter the new bus ID: ");
+		int bus = scan.nextInt();
+		
+		String sql = "UPDATE TripOffering "
+				+ "SET BusID = \"" + bus + "\" "
+				+ "WHERE TripNumber = \"" + tripNum + "\" "
+				+ "AND TripDate = \"" + date + "\" "
+				+ "AND ScheduledStartTime = \"" + startTime + "\" ";
+		
+		Statement statement;
+		try {
+			statement = connection.createStatement();
+			statement.executeUpdate(sql);
+			statement.execute(sql);
+			
+			System.out.println("Bus ID updated.");
+			
+		} catch (SQLException e) {
+			System.out.println("Bus ID update unsuccessful");
+		}
+		
+		showTripOffering(connection);
+	}
+	
 }
