@@ -82,14 +82,19 @@ public class Main {
 					showStop(connection);
 					break;
 				case 4:
+					showDriverWeeklySchedule(connection);
 					break;
 				case 5:
+					addADriver(connection);
 					break;
 				case 6: 
+					addABus(connection);
 					break;
 				case 7:
+					deleteABus(connection);
 					break;
 				case 8:
+					recordActualTrip(connection);
 					break;
 				case 9:
 					return;
@@ -125,7 +130,7 @@ public class Main {
 				+ "AND DestinationName = \"" + destination + "\" "
 				+ "AND Tripdate = \"" + date + "\"";
 		
-		System.out.println(sql);
+//		System.out.println(sql);
 		
 		Statement statement;
 		try {
@@ -412,6 +417,229 @@ public class Main {
 			e.printStackTrace();
 		}
 			
+	}
+	
+	
+	@SuppressWarnings("resource")
+	public static void showDriverWeeklySchedule(Connection connection) {
+		Scanner scan = new Scanner(System.in);
+		System.out.print("\n> Please enter the name of the driver: ");
+		String driverName = scan.nextLine();
+		System.out.print("> Please enter the date: ");
+		String driverDate = scan.nextLine();
+		
+		String sql = "SELECT DISTINCT T1.DriverName, T1.TripNumber, T1.TripDate, "
+				+ "T1.ScheduledStartTime, T1.ScheduledArrivalTime, T1.BusID "
+				+ "FROM TripOffering AS T1 "
+				+ "WHERE T1.DriverName = \"" + driverName + "\" "
+				+ "AND T1.TripDate >= \"" + driverDate + "\" ";
+		
+//		System.out.println(sql);
+		
+		Statement statement;
+		try {
+			statement = connection.createStatement();
+			ResultSet result = statement.executeQuery(sql);
+			
+			System.out.println("\n----------------------------------- Trip Offering -----------------------------------");
+			System.out.println(String.format("%-15s %-15s %-15s %-15s %-15s %-15s", "Date", "Driver Name", "Trip Number", "Start Time", "Arrival Time", "Bus ID"));
+			while(result.next()) {
+				String tripNum = result.getString("TripNumber");
+				String date = result.getString("TripDate");
+				String startTime = result.getString("ScheduledStartTime");
+				String arrivalTime = result.getString("ScheduledArrivalTime");
+				String driver = result.getString("DriverName");
+				int bus = result.getInt("BusID");
+				
+				System.out.println(String.format("%-15s %-15s %-15s %-15s %-15s %-15s", date,driver, tripNum, startTime, arrivalTime, bus));
+				
+			}
+		} catch (SQLException e){
+			System.out.println("Schedule searching error.");
+		}
+	}
+
+	@SuppressWarnings("resource")
+	public static void addADriver(Connection connection) {
+		Scanner scan = new Scanner(System.in);
+		System.out.print("> Please enter the name of the new bus driver: ");
+		String newDriverName = scan.nextLine();
+		System.out.print("> Please enter their phone number: ");
+		String newDriverPhoneNumber = scan.nextLine();
+		
+		String sql = "INSERT INTO Driver VALUES (\"" + newDriverName + "\", "
+				+ "\"" + newDriverPhoneNumber + "\")";
+		
+		Statement statement;
+		try {
+			statement = connection.createStatement();
+			statement.executeUpdate(sql);
+			statement.execute(sql);
+		} catch (SQLException e) {
+			// Exception is thrown even when data are inserted successfully
+		}
+		
+		showDriver(connection);
+		
+	}
+	
+	public static void showBus(Connection connection) {
+		
+		String sql = "SELECT * FROM Bus";
+		
+		Statement statement;
+		try {
+			statement = connection.createStatement();
+			ResultSet result = statement.executeQuery(sql);
+			
+			System.out.println("\n-------------- Bus List --------------");
+			System.out.println(String.format("%-5s %-15s %-15s", "BusID", "Model", "Year"));
+			while(result.next()) {
+				String busID = result.getString("BusID");
+				String model = result.getString("Model");
+				int year = result.getInt("Year");
+				
+				System.out.println(String.format("%-5s %-15s %-15s", busID, model, year));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
+	
+	@SuppressWarnings("resource")
+	public static void addABus(Connection connection) {
+		
+		Scanner scan = new Scanner(System.in);
+		System.out.print("> Please enter the bus ID: ");
+		int bus = scan.nextInt();
+		scan.nextLine();
+		System.out.print("> Please enter the bus Model: ");
+		String model = scan.nextLine();
+		System.out.print("> Please enter the bus Year: ");
+		int year = scan.nextInt();
+		
+		String sql = "INSERT INTO Bus VALUES (" + bus + ", "
+				+ "\"" + model + "\", "
+				+ year + ")";
+		
+		Statement statement;
+		try {
+			statement = connection.createStatement();
+			statement.executeUpdate(sql);
+			statement.execute(sql);
+		} catch (SQLException e) {
+			// Exception is thrown even when data are inserted successfully
+		}
+		
+		showBus(connection);
+		
+	}
+	
+	
+	@SuppressWarnings("resource")
+	public static void deleteABus(Connection connection) {
+		
+		Scanner scan = new Scanner(System.in);
+		System.out.print("> Please enter the bus ID: ");
+		int bus = scan.nextInt();
+		
+		String sql = "DELETE * FROM Bus "
+				+ "WHERE BusID = " + bus;
+		
+		Statement statement;
+		try {
+			statement = connection.createStatement();
+			statement.executeUpdate(sql);
+			statement.execute(sql);
+		} catch (SQLException e) {
+			// Exception is thrown even when data are inserted successfully
+		}
+		
+		showBus(connection);
+		
+	}
+	
+	
+	@SuppressWarnings("resource")
+	public static void recordActualTrip(Connection connection) {
+		
+		Scanner scan = new Scanner(System.in);
+		System.out.print("> Please enter the Trip Number: ");
+		String tripNum = scan.nextLine();
+		System.out.print("> Please enter the Date: ");
+		String date = scan.nextLine();
+		System.out.print("> Please enter the Scheduled Start Time: ");
+		String scheduledStartTime = scan.nextLine();
+		System.out.print("> Please enter the Stop Number: ");
+		int stopNum = scan.nextInt();
+		scan.nextLine();
+		System.out.print("> Please enter Scheduled Arrival Time: ");
+		String scheduledArrivalTime = scan.nextLine();
+		System.out.print("> Please enter the Actual Start Time: ");
+		String actualStartTime = scan.nextLine();
+		System.out.print("> Please enter the Actual Arrival Time: ");
+		String actualArrivalTime = scan.nextLine();
+		System.out.print("> Please enter the Number of Passenger In: ");
+		int numOfPassengerIn = scan.nextInt();
+		scan.nextLine();
+		System.out.print("> Please enter the Number of Passenger Out:  ");
+		int numOfPassengerOut = scan.nextInt();
+		
+		String sql = "INSERT INTO ActualTripStopInfo VALUES (\"" + tripNum + "\", "
+				+ "\"" + date + "\", "
+				+ "\"" + scheduledStartTime + "\", "
+				+ stopNum + ", "
+				+ "\"" + scheduledArrivalTime + "\", "
+				+ "\"" + actualStartTime + "\", "
+				+ "\"" + actualArrivalTime + "\", "
+				+ numOfPassengerIn + ", "
+				+ numOfPassengerOut + ")";
+
+		Statement statement;
+		try {
+			statement = connection.createStatement();
+			statement.executeUpdate(sql);
+			statement.execute(sql);
+		} catch (SQLException e) {
+			// Exception is thrown even when data are inserted successfully
+		}
+		
+		showActualTrip(connection);
+		
+	}
+	
+	
+	public static void showActualTrip(Connection connection) {
+		
+		String sql = "SELECT * FROM ActualTripStopInfo";
+		
+		Statement statement;
+		try {
+			statement = connection.createStatement();
+			ResultSet result = statement.executeQuery(sql);
+			
+			System.out.println("\n---------------------------- Actual Trip Info ----------------------------");
+			
+			while(result.next()) {
+				String tripNum = result.getString("TripNumber");
+				String date = result.getString("TripDate");
+				String sStart = result.getString("ScheduledStartTime");
+				int stopNum = result.getInt("StopNumber");
+				String sArrival = result.getString("ScheduledArrivalTime");
+				String aStart = result.getString("ActualStartTime");
+				String aArrival = result.getString("ActualArrivalTime");
+				int in = result.getInt("NumberOfPassengerIn");
+				int out = result.getInt("NumberOfPassengerOut");
+				
+				System.out.println(String.format("%-8s %-15s %-10s %-8s %-10s %-10s %-10s %-5s %-5s",
+						tripNum, date, sStart, stopNum, sArrival, aStart, aArrival, in, out));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
 	}
 	
 }
