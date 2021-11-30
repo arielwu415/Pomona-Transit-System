@@ -1,0 +1,89 @@
+INSERT INTO Trip
+VALUES	("197", "Montclair Transit Center", "Pomona Transit Center"),
+	("286", "Brea Mall", "Pomona Transit Center"),
+	("482", "Pomona Transit Center", "Puente Hills Mall"),
+	("Silver Streak", "Montclair Transit Center", "LA Convention Ctr")
+
+INSERT INTO Bus
+VALUES	(1, "Minibus", 2011),
+	(2, "Single deck", 1990),
+	(3, "Single deck", 1994),
+	(4, "Double deck", 1998),
+	(5, "Double deck", 2016)
+
+INSERT INTO Driver
+VALUES	("Harry Allen", "6260000000"),
+	("Edwin Thomas", "6260000001"),
+	("Rita Carrey", "6260000002"),
+	("Kevin Miller", "6260000003"),
+	("Karen Buss", "6260000004")
+
+INSERT INTO TripOffering
+VALUES	("197", "11/24/2021", "8:00AM", "8:50AM", "Harry Allen", 1),
+	("197", "11/24/2021", "8:30AM", "9:20AM", "Edwin Thomas", 2),
+	("286", "11/24/2021", "8:05AM", "8:52AM", "Rita Carrey", 3),
+	("286", "11/25/2021", "8:05AM", "8:52AM", "Rita Carrey", 3),
+	("482", "11/25/2021", "8:00AM", "9:27AM", "Harry Allen", 5),
+	("482", "11/25/2021", "12:30PM", "1:41PM", "Edwin Thomas", 5),
+	("Silver Streak", "11/25/2021", "12:00PM", "1:25PM", "Karen Buss", 4)
+
+INSERT INTO Stop
+VALUES	(100, "Montclair Transit Center"),
+	(200, "Pomona Transit Center"),
+	(300, "Brea Mall"),
+	(400, "Puente Hills Mall"),
+	(500, "LA Convention Ctr"),
+	(101, "White Ave & McKinley Ave"),
+	(102, "Fairplex Dr & Orange Grove Ave"),
+	(301, "Diamond Bar Blvd & Grand Ave"),
+	(201, "Mission Blvd & Temple Ave"),
+	(202, "Diamond Bar City Hall"),
+	(1001, "El Monte Station"),
+	(1002, "USC Medical Center")
+
+INSERT INTO ActualTripStopInfo
+VALUES	("197", "11/24/2021", "8:00AM", 100, "8:00AM", "8:00AM", "8:00AM", 15, 0),
+	("197", "11/24/2021", "8:00AM", 101, "8:26AM", "8:00AM", "8:27AM", 5, 5),
+	("197", "11/24/2021", "8:00AM", 102, "8:36AM", "8:00AM", "8:40AM", 3, 5),
+	("197", "11/24/2021", "8:00AM", 200, "8:50AM", "8:00AM", "8:51AM", 0, 12),
+	("197", "11/24/2021", "8:30AM", 100, "8:30AM", "8:31AM", "8:31AM", 20, 0),
+	("197", "11/24/2021", "8:30AM", 101, "8:56AM", "8:31AM", "8:55AM", 10, 5),
+	("197", "11/24/2021", "8:30AM", 102, "9:06AM", "8:31AM", "9:08AM", 5, 15),
+	("197", "11/24/2021", "8:30AM", 200, "9:20AM", "8:31AM", "9:21AM", 0, 15),
+	("286", "11/24/2021", "8:05AM", 300, "8:05AM", "8:05AM", "8:05AM", 12, 0),
+	("286", "11/24/2021", "8:05AM", 301, "8:30AM", "8:05AM", "8:30AM", 8, 4),
+	("286", "11/24/2021", "8:05AM", 200, "8:52AM", "8:05AM", "8:51AM", 0, 16),
+	("286", "11/25/2021", "8:05AM", 300, "8:05AM", "8:05AM", "8:05AM", 13, 0),
+	("286", "11/25/2021", "8:05AM", 301, "8:30AM", "8:05AM", "8:30AM", 7, 5),
+	("286", "11/25/2021", "8:05AM", 200, "8:52AM", "8:05AM", "8:52AM", 0, 15),
+	("482", "11/25/2021", "8:00AM", 200, "8:00AM", "8:01AM", "8:01AM", 18, 0),
+	("482", "11/25/2021", "8:00AM", 201, "8:29AM", "8:01AM", "8:30AM", 2, 5),
+	("482", "11/25/2021", "8:00AM", 202, "8:45AM", "8:01AM", "8:45AM", 10, 5),
+	("482", "11/25/2021", "8:00AM", 400, "9:27AM", "8:01AM", "9:30AM", 0, 20),
+	("482", "11/25/2021", "12:30PM", 200, "12:30PM", "12:30PM", "12:30PM", 18, 0),
+	("482", "11/25/2021", "12:30PM", 201, "1:00PM", "12:30PM", "1:01PM", 2, 5),
+	("482", "11/25/2021", "12:30PM", 202, "1:15PM", "12:30PM", "1:15PM", 10, 5),
+	("482", "11/25/2021", "12:30PM", 400, "1:41PM", "12:30PM", "1:40PM", 0, 20),
+	("Silver Streak", "11/25/2021", "12:00PM", 100, "12:00PM", "12:00PM", "12:00PM", 25, 0),
+	("Silver Streak", "11/25/2021", "12:00PM", 1001, "12:53PM", "12:00PM", "12:55PM", 3, 8),
+	("Silver Streak", "11/25/2021", "12:00PM", 1002, "1:05PM", "12:00PM", "1:05PM", 2, 12),
+	("Silver Streak", "11/25/2021", "12:00PM", 500, "1:25PM", "12:00PM", "1:27PM", 0, 10)
+
+INSERT INTO TripStopInfo
+VALUES	("197", 100, 0, 0),
+	("197", 101, 1, 26),
+	("197", 102, 2, 20),
+	("197", 200, 3, 14),
+	("286", 300, 0, 0),
+	("286", 301, 1, 25),
+	("286", 200, 2, 22),
+	("482", 200, 0, 0),
+	("482", 201, 1, 22),
+	("482", 202, 2, 13),
+	("482", 400, 3, 33),
+	("Silver Streak", 100, 0, 0),
+	("Silver Streak", 200, 1, 17),
+	("Silver Streak", 1001, 2, 36),
+	("Silver Streak", 1002, 3, 12),
+	("Silver Streak", 500, 4, 20)
+	
